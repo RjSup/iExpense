@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddView: View {
+    @Environment(\.modelContext) var modelContext
+    
     @State private var name: String = ""
     @State private var type: String = "Personal"
     @State private var amount: Double = 0.0
-    // EXPENSES ARE AN EXPENSE WHICH IS AN ARRAY OF EXPENSE ITEMS
-    var expenses: Expense
     
     let types = ["Business", "Personal"]
     
@@ -37,8 +38,8 @@ struct AddView: View {
             // actually add an item to the expense items
             .toolbar {
                 Button("Save") {
-                    let item = ExpenseItem(name: name, type: type, amount: amount)
-                    expenses.items.append(item)
+                    let item = Expense(name: name, type: type, amount: amount)
+                    modelContext.insert(item)
                     // dissmiss the view after saving
                     dismiss()
                 }
@@ -48,5 +49,6 @@ struct AddView: View {
 }
 
 #Preview {
-    AddView(expenses: Expense())
+    AddView()
+        .modelContainer(for: Expense.self, inMemory: true)
 }

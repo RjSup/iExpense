@@ -6,30 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
-@Observable
+@Model
 class Expense {
-    // computed property
-    // array of expense items called (items)
-    var items = [ExpenseItem]() {
-        // checks for items added or removed
-        didSet {
-            // create encoder use it to encode 
-            if let encoded = try? JSONEncoder().encode(items) {
-                
-                UserDefaults.standard.set(encoded, forKey: "Items")
-            }
-        }
-    }
+    var id = UUID()
+    var name: String
+    var type: String
+    var amount: Double
     
-    init() {
-        if let savedItems = UserDefaults.standard.data(forKey: "Items") {
-            if let decodedItems = try? JSONDecoder().decode([ExpenseItem].self, from: savedItems) {
-                items = decodedItems
-                return
-            }
-        }
-        
-        items = []
+    init(id: UUID = UUID(), name: String, type: String, amount: Double) {
+        self.id = id
+        self.name = name
+        self.type = type
+        self.amount = amount
     }
 }
